@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Exercise failure paths over a complete otherwise-valid site.
+set -u
+scratch="$(mktemp -d -t validate-website-tests.XXXXXXXX)" || exit 1
+trap 'rm -rf -- "$scratch"' EXIT
+cp -R public "$scratch/site" || exit 1
+failures=0
+expect_rejected() {
+	local output rc
+	output="$(luajit tests/site.lua "$scratch/site" 2>&1)"; rc=$?
+	if [ "$rc" -eq 0 ]; then
+		printf 'FAIL: accepted %s\n' "$1"
+		failures=$((failures+1))
+	fi
+}
+printf 'private source\n' > "$scratch/site/private.zig"
+expect_rejected 'unexpected source file'
+rm -- "$scratch/site/private.zig"
+mv "$scratch/site/assets/site.css" "$scratch/asset"
+expect_rejected 'missing stylesheet'
+mv "$scratch/asset" "$scratch/site/assets/site.css"
+mv "$scratch/site/CNAME" "$scratch/domain"
+ln -s "$scratch/domain" "$scratch/site/CNAME"
+expect_rejected 'symlink at an allowed path'
+rm -- "$scratch/site/CNAME"
+mv "$scratch/domain" "$scratch/site/CNAME"
+cp "$scratch/site/index.html" "$scratch/original"
+printf '<a href="/missing/">broken</a>\n' >> "$scratch/site/index.html"
+expect_rejected 'broken local link'
+cp "$scratch/original" "$scratch/site/index.html"
+printf '<a href="https://github.com/pmarreck/validate">old source</a>\n' >> "$scratch/site/index.html"
+expect_rejected 'private application link'
+cp "$scratch/original" "$scratch/site/index.html"
+printf '<a href="https://mega.nz/file/expired">old download</a>\n' >> "$scratch/site/index.html"
+expect_rejected 'legacy expiring download link'
+cp "$scratch/original" "$scratch/site/index.html"
+luajit tests/site.lua "$scratch/site" >/dev/null 2>&1 || failures=$((failures+1))
+if [ "$failures" -eq 0 ]; then printf 'PASS: six injected website defects rejected; restored baseline accepted\n'; fi
+exit "$failures"

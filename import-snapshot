@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Import only reviewed, committed public output. Never push automatically.
+set -u
+set -o pipefail
+if [ "$#" -ne 2 ]; then
+	printf 'Usage: ./import-snapshot PATH_TO_VALIDATE COMMIT_SHA\n' >&2
+	exit 2
+fi
+source_repo="$(cd "$1" && pwd)" || exit 1
+revision="$(git -C "$source_repo" rev-parse --verify "$2^{commit}")" || exit 1
+cd "$(dirname "$0")" || exit 1
+if [ -f SOURCE_COMMIT ]; then
+	git diff --quiet -- public SOURCE_COMMIT && git diff --cached --quiet -- public SOURCE_COMMIT || {
+		printf 'Refusing to overwrite uncommitted website changes. Commit or preserve them first.\n' >&2
+		exit 1
+	}
+fi
+if [ -f public/index.html ]; then ./test || exit 1; fi
+paths=(docs/index.html docs/coverage/index.html docs/assets/site.css docs/assets/site.js docs/CNAME docs/sitemap.xml)
+for lang in am ar az bg bn bs da de el es fa fi fil fr ha he hi hr hu id ig is it ja km ko mk nb nl pa pl ps pt-br ro ru sl sq sr sv sw ta th tr uk ur vi yo zh-hans zh-hant; do
+	paths+=("docs/$lang/index.html" "docs/$lang/coverage/index.html")
+done
+# mktemp owns a new scratch directory; source and destination are never cleanup targets.
+scratch="$(mktemp -d -t validate-website-import.XXXXXXXX)" || exit 1
+trap 'rm -rf -- "$scratch"' EXIT
+git -C "$source_repo" archive "$revision" -- "${paths[@]}" | tar -x -C "$scratch" --strip-components=1 || exit 1
+touch "$scratch/.nojekyll"
+# Mechanical URL-only rewrite; all translated text and other bytes are preserved.
+while IFS= read -r -d '' page; do
+	sed -i 's@https://github.com/pmarreck/validate"@https://github.com/pmarreck/validate_website"@g' "$page" || exit 1
+done < <(find "$scratch" -type f -name '*.html' -print0)
+./test "$scratch" || exit 1
+mkdir -p public || exit 1
+cp -R "$scratch/." public/ || exit 1
+printf '%s\n' "$revision" > SOURCE_COMMIT
+./test || exit 1
+printf 'Imported %s. Review git diff, then commit and push when approved.\n' "$revision"
