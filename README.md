@@ -32,6 +32,14 @@ the checked static artifact in `result/`. Tests check the full public file set,
 all local page/asset references, the domain, and obsolete download/source links.
 Passing these checks does not certify translated prose or product claims.
 
+The September 24, 2026 refresh was coordinated with the validation engine's
+agent. The format list describes development scope, not a release support
+guarantee. Coverage retains 237 historical measurement rows with their original
+rates and dates. Old mechanism descriptions are omitted pending the engine's
+claims audit, and sample columns contain sizes only because fixture names may
+identify private source files. Both disclosures and the sample-size boundary
+are checked for every locale; nine injected defects exercise rejection paths.
+
 `SOURCE_COMMIT` records the private generator snapshot. Imports rewrite the old
 application GitHub link to this public website repository without changing the
 translated page text. The original source license is retained in `LICENSE`;

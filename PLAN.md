@@ -1,4 +1,11 @@
-# Website separation
+# PLAN
+
+## Current website refresh
+
+- [x] Reconcile claims with the validate agent and prepare the generated snapshot at private commit 1ed2a7657 (done 2026-09-24 16:50 EDT).
+- [x] Import all 50 locales and pass the public-boundary suite, nine injected-defect checks, and Nix build using source 1ed2a7657 (done 2026-09-24 16:50 EDT).
+
+## Website separation
 
 - [x] Copy the explicitly allowed committed website files and preserve existing licensing. September 12, 2026 EDT.
 - [x] Pass file-boundary, page/link and six injected-defect checks locally and in Nix. September 12, 2026 EDT.

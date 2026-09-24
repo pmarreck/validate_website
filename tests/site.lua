@@ -43,6 +43,19 @@ for path in pairs(expected) do
 		check(body:find("<html", 1, true), "Not HTML: " .. path)
 		check(not body:find("https://github.com/pmarreck/validate\"", 1, true), "Private repo link: " .. path)
 		check(not body:find("mega.nz/", 1, true), "Expired legacy download URL: " .. path)
+		if path:match("coverage/index%.html$") then
+			check(body:find('<p class="coverage%-history">[^<]+</p>'), "Missing historical-measurement disclosure: " .. path)
+			check(not body:find('class="mech', 1, true), "Retired mechanism or fixture metadata: " .. path)
+			local samples = 0
+			for cell in body:gmatch('<td class="sample">(.-)</td>') do
+				samples = samples + 1
+				local size = cell:match('^<bdi dir="ltr">([^<]+)</bdi>$')
+				check(size and (size == "n/a" or size:match('^%d+%.?%d* [KMGT]?B$')), "Sample column must contain only a size: " .. path)
+			end
+			check(samples > 0, "Missing sample sizes: " .. path)
+		else
+			check(body:find('<p class="claim%-scope">[^<]+</p>'), "Missing development-scope disclosure: " .. path)
+		end
 		for key, value in body:gmatch('([%w-]+)="([^"]*)"') do
 			if key == "href" or key == "src" then
 				local target = value:gsub("^https://validate%.pics", ""):match("^(/[^?#]*)")
@@ -61,4 +74,4 @@ if #errors > 0 then
 	io.stderr:write(table.concat(errors, "\n"), "\n")
 	os.exit(1)
 end
-print("PASS: 100 pages, exact public file boundary, local links, domain, and legacy-link checks")
+print("PASS: 100 pages, public boundary, links, domain, claim disclosures, and sample privacy")
