@@ -1,5 +1,11 @@
 # PLAN
 
+## Launch coverage review (October 10)
+
+- [x] Coordinate ownership with Validate, preserve its dirty draft, and audit historical evidence without engine builds; source 7b32c2afb (done 2026-10-10 19:17 EDT).
+- [x] Prepare 50 locales with tabled BLIP rows removed and explicit launch gaps; 16 generator suites, 12 public injected-defect checks and Nix build passed for source 7b32c2afb (done 2026-10-10 19:17 EDT).
+- [ ] Keep the October 10 candidate undeployed pending explicit deployment direction; current whole-file coverage remains unaccepted.
+
 ## Current website refresh
 
 - [x] Reconcile claims with the validate agent and prepare the generated snapshot at private commit 1ed2a7657 (done 2026-09-24 16:50 EDT).

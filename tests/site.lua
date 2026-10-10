@@ -45,6 +45,10 @@ for path in pairs(expected) do
 		check(not body:find("mega.nz/", 1, true), "Expired legacy download URL: " .. path)
 		if path:match("coverage/index%.html$") then
 			check(body:find('<p class="coverage%-history">[^<]+</p>'), "Missing historical-measurement disclosure: " .. path)
+			check(body:find('<p class="coverage%-gaps">[^<]+</p>'), "Missing launch evidence gaps: " .. path)
+			check(body:find('<th>Nuke (legacy shotgun)</th>', 1, true) and not body:find('<th>Shotgun</th>', 1, true), "Ambiguous historical mutation operator: " .. path)
+			local lower = body:lower()
+			check(not lower:find('%f[%w]m?blar%f[%W]') and not lower:find('blip archive', 1, true) and not lower:find('blip mini', 1, true), "Tabled archive present: " .. path)
 			check(not body:find('class="mech', 1, true), "Retired mechanism or fixture metadata: " .. path)
 			local samples = 0
 			for cell in body:gmatch('<td class="sample">(.-)</td>') do

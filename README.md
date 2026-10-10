@@ -40,6 +40,16 @@ claims audit, and sample columns contain sizes only because fixture names may
 identify private source files. Both disclosures and the sample-size boundary
 are checked for every locale; nine injected defects exercise rejection paths.
 
+The October 10 review candidate retains 235 historical rows after removing the
+tabled BLIP Archive and BLIP Mini entries. Raw historical evidence remains in
+the private project. The dense 4,096-byte overwrite column is labeled
+"Nuke (legacy shotgun)" to distinguish it from modern sparse shotgun trials.
+All 50 coverage pages disclose the unaccepted current evidence for RAW, PDF,
+H.264/H.265, MP3/M4A and DICOM. The private generator pins the selected report's
+SHA-256 instead of choosing the newest run. Twelve injected defects exercise
+the public boundary. This candidate adds no new detection rates and is prepared
+for review without deployment or a release.
+
 `SOURCE_COMMIT` records the private generator snapshot. Imports rewrite the old
 application GitHub link to this public website repository without changing the
 translated page text. The original source license is retained in `LICENSE`;

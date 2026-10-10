@@ -45,5 +45,15 @@ sed -i 's/336 KB/private-fixture.png · 336 KB/' "$scratch/site/coverage/index.h
 expect_rejected 'fixture filename in sample column'
 cp "$scratch/coverage-original" "$scratch/site/coverage/index.html"
 luajit tests/site.lua "$scratch/site" >/dev/null 2>&1 || failures=$((failures+1))
-if [ "$failures" -eq 0 ]; then printf 'PASS: nine injected website defects rejected; restored baseline accepted\n'; fi
+sed -i 's/class="coverage-gaps"/class="removed"/' "$scratch/site/coverage/index.html"
+expect_rejected 'missing launch evidence gaps'
+cp "$scratch/coverage-original" "$scratch/site/coverage/index.html"
+sed -i 's/Nuke (legacy shotgun)/Shotgun/' "$scratch/site/coverage/index.html"
+expect_rejected 'historical dense rates labeled as modern shotgun'
+cp "$scratch/coverage-original" "$scratch/site/coverage/index.html"
+printf '<p>BLIP Archive</p>\n' >> "$scratch/site/coverage/index.html"
+expect_rejected 'tabled archive reintroduced'
+cp "$scratch/coverage-original" "$scratch/site/coverage/index.html"
+luajit tests/site.lua "$scratch/site" >/dev/null 2>&1 || failures=$((failures+1))
+if [ "$failures" -eq 0 ]; then printf 'PASS: twelve injected website defects rejected; restored baseline accepted\n'; fi
 exit "$failures"
