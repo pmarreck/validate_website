@@ -1,7 +1,10 @@
 # Dirtree: Stateful directory trees in the CLI for humans and LLMs. https://github.com/pmarreck/dirtree
 ver=1.2
 annotate=[
+	docs/PLAN_LOG.md = Retired website plan completions
+	docs/plan_context/coverage_review_20261014.md = Coverage evidence status and publication prerequisites
 	import-snapshot = Imports an exact private commit through the explicit static-site allowlist without committing or pushing
 	public = Only reviewed generated pages and assets; no application source or private generator
 	tests = Complete public-tree checks and six injected publication defects
+	tests/encoding = Rejects malformed UTF-8 across every published HTML page
 ]

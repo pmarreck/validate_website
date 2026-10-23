@@ -14,7 +14,7 @@
 						version = "2026-09-12";
 						src = self;
 						strictDeps = true;
-						nativeBuildInputs = [ pkgs.luajit pkgs.findutils ];
+						nativeBuildInputs = [ pkgs.luajit pkgs.findutils pkgs.iconv ];
 						dontBuild = true;
 						doCheck = true;
 						checkPhase = "bash ./test";
@@ -28,6 +28,6 @@
 			checks = forSystems (system: { website = self.packages.${system}.website; });
 			devShells = forSystems (system:
 				let pkgs = import nixpkgs { inherit system; };
-				in { default = pkgs.mkShell { packages = [ pkgs.bash pkgs.luajit pkgs.findutils pkgs.gnused pkgs.gnutar pkgs.coreutils pkgs.git ]; }; });
+				in { default = pkgs.mkShell { packages = [ pkgs.bash pkgs.luajit pkgs.findutils pkgs.gnused pkgs.gnutar pkgs.coreutils pkgs.git pkgs.iconv ]; }; });
 		};
 }

@@ -55,5 +55,13 @@ printf '<p>BLIP Archive</p>\n' >> "$scratch/site/coverage/index.html"
 expect_rejected 'tabled archive reintroduced'
 cp "$scratch/coverage-original" "$scratch/site/coverage/index.html"
 luajit tests/site.lua "$scratch/site" >/dev/null 2>&1 || failures=$((failures+1))
-if [ "$failures" -eq 0 ]; then printf 'PASS: twelve injected website defects rejected; restored baseline accepted\n'; fi
+printf '\341\273nt' >> "$scratch/site/index.html"
+output="$(bash tests/encoding "$scratch/site" 2>&1)"; rc=$?
+if [ "$rc" -eq 0 ]; then
+	printf 'FAIL: accepted incomplete UTF-8 sequence\n'
+	failures=$((failures+1))
+fi
+cp "$scratch/original" "$scratch/site/index.html"
+bash tests/encoding "$scratch/site" >/dev/null 2>&1 || failures=$((failures+1))
+if [ "$failures" -eq 0 ]; then printf 'PASS: thirteen injected website defects rejected; restored baseline accepted\n'; fi
 exit "$failures"

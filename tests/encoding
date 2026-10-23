@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -u
+root="${1:-public}"
+command -v iconv >/dev/null 2>&1 || { printf 'FAIL: iconv is required for encoding checks\n'; exit 1; }
+failures=0
+pages=0
+while IFS= read -r -d '' page; do
+	pages=$((pages+1))
+	if ! iconv -f UTF-8 -t UTF-8 "$page" >/dev/null 2>&1; then
+		printf 'FAIL: invalid UTF-8: %s\n' "$page"
+		failures=$((failures+1))
+	fi
+done < <(find "$root" -type f -name '*.html' -print0)
+if [ "$pages" -ne 100 ]; then
+	printf 'FAIL: encoding check expected 100 HTML pages, found %s\n' "$pages"
+	failures=$((failures+1))
+fi
+if [ "$failures" -eq 0 ]; then printf 'PASS: all 100 HTML pages contain valid UTF-8\n'; fi
+exit "$failures"

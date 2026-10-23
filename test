@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -u
 cd "$(dirname "$0")" || exit 1
-if [ "$#" -gt 0 ]; then exec luajit tests/site.lua "$1"; fi
 failed=0
-luajit tests/site.lua public || failed=$((failed+1))
+luajit tests/site.lua "${1:-public}" || failed=$((failed+1))
+bash tests/encoding "${1:-public}" || failed=$((failed+1))
+if [ "$#" -gt 0 ]; then exit "$failed"; fi
 bash tests/boundary || failed=$((failed+1))
 exit "$failed"

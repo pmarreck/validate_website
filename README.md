@@ -46,9 +46,11 @@ the private project. The dense 4,096-byte overwrite column is labeled
 "Nuke (legacy shotgun)" to distinguish it from modern sparse shotgun trials.
 All 50 coverage pages disclose the unaccepted current evidence for RAW, PDF,
 H.264/H.265, MP3/M4A and DICOM. The private generator pins the selected report's
-SHA-256 instead of choosing the newest run. Twelve injected defects exercise
-the public boundary. This candidate adds no new detection rates and is prepared
-for review without deployment or a release.
+SHA-256 instead of choosing the newest run. Thirteen injected defects exercise
+the public boundary, including malformed UTF-8. The October 23 deployment
+follow-up repairs five incomplete characters in the Igbo coverage labels and
+checks all 100 HTML pages with iconv. It adds no new detection rates and does
+not constitute an application release.
 
 `SOURCE_COMMIT` records the private generator snapshot. Imports rewrite the old
 application GitHub link to this public website repository without changing the
