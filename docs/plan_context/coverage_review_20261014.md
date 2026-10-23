@@ -23,6 +23,11 @@ All 105 public files match that commit after the documented URL rewrite and
 empty `.nojekyll` addition. The public suite passes, including 13 injected
 defects, and the static Nix build passes with iconv explicitly provided.
 
+Deployment completed October 23 at public commit
+`b6ec38c1d6350ea323593576999258324aff698f`, GitHub Pages run `40002086613`.
+All 100 live HTML pages, both shared assets and the sitemap returned HTTP 200
+and matched the committed files byte for byte at `https://validate.pics/`.
+
 ## October 14 snapshot
 
 The prepared presentation correction remains public candidate
